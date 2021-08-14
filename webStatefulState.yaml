@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  serviceName: "web"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: web
+        image: shuvamoy008/webapp
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: web-volume
+          mountPath: /data/web
+  volumeClaimTemplates:
+  - metadata:
+      name: web-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
